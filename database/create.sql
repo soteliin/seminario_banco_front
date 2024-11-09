@@ -47,6 +47,21 @@ VALUES
     (15, 3);
 
 CREATE TABLE
+    segundop.tc_estado_civil (
+        id_estado_civil SERIAL PRIMARY KEY,
+        estado_civil VARCHAR(15) NOT NULL
+    );
+
+INSERT INTO
+    segundop.tc_estado_civil (estado_civil)
+VALUES
+    ('Solter@'),
+    ('Casad@'),
+    ('Viud@'),
+    ('Separad@'),
+    ('Divorciad@');
+
+CREATE TABLE
     segundop.tr_cliente (
         id_cliente SERIAL,
         nombre_completo VARCHAR(100) NOT NULL,
@@ -55,8 +70,10 @@ CREATE TABLE
         fecha_alta DATE NOT NULL DEFAULT CURRENT_DATE,
         telefono VARCHAR(15) NOT NULL,
         correo VARCHAR(100) NOT NULL UNIQUE PRIMARY KEY,
-        contrasena VARCHAR(20) NOT NULL,
-        sueldo DECIMAL(15, 2) CHECK (sueldo >= 0)
+        contrasena TEXT NOT NULL,
+        sueldo DECIMAL(15, 2) CHECK (sueldo >= 0),
+        id_estado_civil INT NOT NULL,
+        CONSTRAINT fk_estado_civil FOREIGN KEY (id_estado_civil) REFERENCES segundop.tc_estado_civil (id_estado_civil) ON UPDATE CASCADE ON DELETE CASCADE
     );
 
 CREATE TABLE
@@ -72,22 +89,64 @@ CREATE TABLE
         CONSTRAINT fk_cliente FOREIGN KEY (correo_cliente) REFERENCES segundop.tr_cliente (correo) ON UPDATE CASCADE ON DELETE CASCADE
     );
 
-CREATE TABLE segundop.tr_casa (
-    id_casa SERIAL PRIMARY KEY,
-    nombre_casa VARCHAR(50) NOT NULL,
-    direccion VARCHAR(150) NOT NULL,
-    costo DECIMAL(15, 2) NOT NULL CHECK (costo >= 0)
-);
+CREATE TABLE
+    segundop.tr_casa (
+        id_casa SERIAL PRIMARY KEY,
+        nombre_casa VARCHAR(50) NOT NULL,
+        direccion VARCHAR(150) NOT NULL,
+        costo DECIMAL(15, 2) NOT NULL CHECK (costo >= 0)
+    );
 
-INSERT INTO segundop.tr_casa (nombre_casa, direccion, costo)
+INSERT INTO
+    segundop.tr_casa (nombre_casa, direccion, costo)
 VALUES
-('Casa en la Playa', '123 Calle Mar, Playa Azul, Quintana Roo', 25000000.00),
-('Casa de Campo', '456 Camino Rural, Valle Verde, Jalisco', 18000000.00),
-('Penthouse Urbano', '789 Avenida Central, Ciudad de México, CDMX', 35000000.00),
-('Residencia Lujosa', '1010 Boulevard de las Estrellas, Monterrey, Nuevo León', 50000000.00),
-('Casa Familiar', '1111 Calle Amistad, Puebla, Puebla', 15000000.00),
-('Villa Colonial', '1212 Plaza Antigua, Mérida, Yucatán', 22000000.00),
-('Cabaña en el Bosque', '1313 Sendero del Roble, Valle de Bravo, Estado de México', 17500000.00),
-('Departamento Moderno', '1414 Avenida Reforma, Guadalajara, Jalisco', 20000000.00),
-('Hacienda Tradicional', '1515 Camino Real, San Miguel de Allende, Guanajuato', 40000000.00),
-('Loft en la Ciudad', '1616 Calle Independencia, Querétaro, Querétaro', 19000000.00);
+    (
+        'Casa en la Playa',
+        '123 Calle Mar, Playa Azul, Quintana Roo',
+        25000000.00
+    ),
+    (
+        'Casa de Campo',
+        '456 Camino Rural, Valle Verde, Jalisco',
+        18000000.00
+    ),
+    (
+        'Penthouse Urbano',
+        '789 Avenida Central, Ciudad de México, CDMX',
+        35000000.00
+    ),
+    (
+        'Residencia Lujosa',
+        '1010 Boulevard de las Estrellas, Monterrey, Nuevo León',
+        50000000.00
+    ),
+    (
+        'Casa Familiar',
+        '1111 Calle Amistad, Puebla, Puebla',
+        15000000.00
+    ),
+    (
+        'Villa Colonial',
+        '1212 Plaza Antigua, Mérida, Yucatán',
+        22000000.00
+    ),
+    (
+        'Cabaña en el Bosque',
+        '1313 Sendero del Roble, Valle de Bravo, Estado de México',
+        17500000.00
+    ),
+    (
+        'Departamento Moderno',
+        '1414 Avenida Reforma, Guadalajara, Jalisco',
+        20000000.00
+    ),
+    (
+        'Hacienda Tradicional',
+        '1515 Camino Real, San Miguel de Allende, Guanajuato',
+        40000000.00
+    ),
+    (
+        'Loft en la Ciudad',
+        '1616 Calle Independencia, Querétaro, Querétaro',
+        19000000.00
+    );

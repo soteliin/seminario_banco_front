@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './components/Login';
 import Register from './components/Register';
+import './styles/Estilos.css';
 
 function App() {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -10,8 +10,7 @@ function App() {
   const switchToLogin = () => setIsRegistering(false);
 
   return (
-    // <div className="card-body">
-     <div>
+    <div className="app-container">
       {isRegistering ? (
         <Register switchToLogin={switchToLogin} />
       ) : (
