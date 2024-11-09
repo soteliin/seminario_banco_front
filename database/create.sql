@@ -55,6 +55,7 @@ CREATE TABLE
         fecha_alta DATE NOT NULL DEFAULT CURRENT_DATE,
         telefono VARCHAR(15) NOT NULL,
         correo VARCHAR(100) NOT NULL UNIQUE PRIMARY KEY,
+        contrasena VARCHAR(20) NOT NULL,
         sueldo DECIMAL(15, 2) CHECK (sueldo >= 0)
     );
 
@@ -67,7 +68,7 @@ CREATE TABLE
         correo_cliente VARCHAR(100) NOT NULL,
         CONSTRAINT fk_tipo_prestamo FOREIGN KEY (id_tipo_prestamo) REFERENCES segundop.tc_tipo_prestamo (id_tipo_prestamo) ON UPDATE CASCADE ON DELETE CASCADE,
         CONSTRAINT fk_amortizacion FOREIGN KEY (id_amortizacion) REFERENCES segundop.tc_amortizacion (id_amortizacion) ON UPDATE CASCADE ON DELETE CASCADE,
-        CONSTRAINT chk_monto_prestamo CHECK (monto_prestamo < sueldo_cliente * 0.4),
+        --CONSTRAINT chk_monto_prestamo CHECK (monto_prestamo < sueldo_cliente * 0.4),
         CONSTRAINT fk_cliente FOREIGN KEY (correo_cliente) REFERENCES segundop.tr_cliente (correo) ON UPDATE CASCADE ON DELETE CASCADE
     );
 

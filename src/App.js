@@ -11,7 +11,7 @@ function App() {
 
   return (
     // <div className="card-body">
-    <div>
+     <div>
       {isRegistering ? (
         <Register switchToLogin={switchToLogin} />
       ) : (

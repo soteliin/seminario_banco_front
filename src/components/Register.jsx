@@ -6,7 +6,7 @@ function Register({ switchToLogin }) {
     return (
         <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: '#121212', color: '#ffffff' }}>
             <div className="card" style={{ backgroundColor: '#1f1f1f', border: 'none' }}>
-                <div className="card-body" style={{ width: '350px', margin: "30px"}}>
+                <div className="card-body" style={{ width: '330px', margin: "30px"}}>
                     <h2 className="card-title text-center" style={{ color: '#ffffff' }}>Registro</h2>
                     <form>
                         <div className="mb-3">
