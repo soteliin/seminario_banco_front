@@ -176,18 +176,39 @@ body {
 .login-link:hover {
     text-decoration: underline;
 } 
-/* Estilos.css */
-/* body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+.houses-container {
+    padding: 20px;
     background-color: #121212;
     color: #ffffff;
-}
-
-.app-container {
     min-height: 100vh;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    background-color: #121212;
-} */
+  }
+  
+  .houses-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .houses-table {
+    width: 80%;
+    border-collapse: collapse;
+  }
+  
+  .houses-table th,
+  .houses-table td {
+    border: 1px solid #444;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .houses-table th {
+    background-color: #1f1f1f;
+    color: #ffffff;
+  }
+  
+  .houses-table td {
+    background-color: #2c2c2c;
+    color: #ffffff;
+  }
