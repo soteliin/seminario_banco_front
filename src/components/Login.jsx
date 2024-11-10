@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-import '../styles/Estilos.css'
+import { Container, Row, Col, Card, Form, Button, InputGroup } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import '../styles/Estilos.css';
 
-function Login({ switchToRegister }) {
+function Login({ switchToRegister, onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -25,6 +28,7 @@ function Login({ switchToRegister }) {
 
       if (response.status === 200) {
         localStorage.setItem('userEmail', email);
+        onLogin(); // Call the validation function
         navigate('/home');
       }
     } catch (error) {
@@ -51,14 +55,22 @@ function Login({ switchToRegister }) {
                   />
                 </Form.Group>
                 <Form.Group controlId="password" className="mb-3">
-                  <Form.Label >Contraseña</Form.Label> 
-                  <Form.Control
-                    type="password"
-                    placeholder="Ingrese su contraseña"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="border"
-                  />
+                  <Form.Label>Contraseña</Form.Label> 
+                  <InputGroup>
+                    <Form.Control
+                      type={showPassword ? 'text' : 'password'} // Toggle between text and password
+                      placeholder="Ingrese su contraseña"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="border"
+                    />
+                    <InputGroup.Text
+                      onClick={() => setShowPassword(!showPassword)} // Toggle the showPassword state
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                    </InputGroup.Text>
+                  </InputGroup>
                 </Form.Group>
                 <Button type="submit" variant="primary" className="w-100 rounded-pill">
                   Iniciar sesión
