@@ -15,7 +15,8 @@ function HouseDetails() {
   const [remainingAmount, setRemainingAmount] = useState(null);
   const [plazos, setPlazos] = useState([]);
   const [selectedPlazo, setSelectedPlazo] = useState('');
-  const [monthlyPayment, setMonthlyPayment] = useState(null); // State for the monthly payment
+  const [monthlyPayment, setMonthlyPayment] = useState(null);
+  const [totalAmount, setTotalAmount] = useState(null); // State for the total amount
 
   useEffect(() => {
     const fetchHouseDetails = async () => {
@@ -50,7 +51,6 @@ function HouseDetails() {
     fetchLenders();
   }, [id]);
 
-  // Handle selecting a lender
   const handleLenderChange = async (e) => {
     const lenderId = e.target.value;
     setSelectedLender(lenderId);
@@ -77,7 +77,6 @@ function HouseDetails() {
     }
   };
 
-  // Handle selecting a plazo and calculate the monthly payment
   const handlePlazoChange = (e) => {
     const plazo = parseInt(e.target.value);
     setSelectedPlazo(plazo);
@@ -86,14 +85,20 @@ function HouseDetails() {
       const annualInterestRate = parseFloat(selectedLenderDetails.tasa_interes) / 100;
       const monthlyInterestRate = annualInterestRate / 12;
       const numberOfPayments = plazo * 12;
-      
+
+      // Calculate the monthly payment using the formula
       const monthlyPaymentValue =
-        (remainingAmount * monthlyInterestRate) /
-        (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+        (remainingAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) /
+        (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
 
       setMonthlyPayment(monthlyPaymentValue);
+
+      // Calculate the total amount to be paid over the loan period
+      const totalAmountValue = monthlyPaymentValue * numberOfPayments;
+      setTotalAmount(totalAmountValue);
     } else {
       setMonthlyPayment(null);
+      setTotalAmount(null);
     }
   };
 
@@ -121,7 +126,7 @@ function HouseDetails() {
               ))}
             </Form.Select>
           </Form.Group>
-          <Form.Group controlId="lender" className="mt-4">
+          <Form.Group controlId="lender" className="mt-3">
             <Form.Label>Prestamista</Form.Label>
             <Form.Select
               value={selectedLender}
@@ -137,12 +142,12 @@ function HouseDetails() {
           </Form.Group>
           {selectedLenderDetails && (
             <div className="mt-4">
-              <p><strong>Tasa de Interés:</strong> {selectedLenderDetails.tasa_interes}%</p>
               <p><strong>Enganche:</strong> {selectedLenderDetails.enganche}%</p>
               <p><strong>Enganche a Pagar:</strong> ${downPayment ? downPayment.toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               }) : 'Calculando...'}</p>
+              <p><strong>Tasa de Interés:</strong> {selectedLenderDetails.tasa_interes}%</p>
               <p><strong>Cantidad Restante:</strong> ${remainingAmount ? remainingAmount.toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
@@ -164,10 +169,16 @@ function HouseDetails() {
             </Form.Select>
           </Form.Group>
           {monthlyPayment && (
-            <p className="mt-4"><strong>Pago Mensual:</strong> ${monthlyPayment.toLocaleString('en-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}</p>
+            <div className="mt-4">
+              <p><strong>Pago Mensual:</strong> ${monthlyPayment.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}</p>
+              <p><strong>Total a Pagar:</strong> ${totalAmount ? totalAmount.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }) : 'Calculando...'}</p>
+            </div>
           )}
         </Card>
       ) : (
