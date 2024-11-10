@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Navbar, Nav } from 'react-bootstrap';
+import { Container, Navbar, Nav, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import Houses from './Houses';
+import '../styles/Estilos.css';
 
-function Home() {
+function Home({ children }) {
   const navigate = useNavigate();
 
   // Get the user's email from localStorage
@@ -17,28 +17,48 @@ function Home() {
     navigate('/'); // Redirect to the login page
   };
 
+  // Handle navigation to Houses page
+  const handleGoToHouses = () => {
+    navigate('/home'); // Navigate to the Houses page
+  };
+
+  // Handle editing profile
+  const handleEditProfile = () => {
+    navigate('/edit-profile'); // Navigate to the Edit Profile page
+  };
+
   return (
-    <Container>
-      <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
-        <Navbar.Brand href="#">Home</Navbar.Brand>
+    <Container fluid className='home'>
+      <Navbar bg="dark" variant="dark" expand="lg" className="mb-4 sticky-top">
+        <Navbar.Brand style={{ cursor: 'pointer' }} onClick={handleGoToHouses}>
+          Home
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#">Casas</Nav.Link>
+            <Nav.Link style={{ cursor: 'pointer' }} onClick={handleGoToHouses}>
+              Casas
+            </Nav.Link>
           </Nav>
           <Nav>
-            <Navbar.Text
-              className="text-light"
-              style={{ cursor: 'pointer' }} // Add cursor pointer to indicate it's clickable
-              onClick={handleLogout} // Handle logout on click
-            >
+            <Dropdown align="end">
+              <Dropdown.Toggle variant="secondary" className="d-flex align-items-center">
                 <FontAwesomeIcon icon={faUser} className="me-2" />
-              {userEmail}
-            </Navbar.Text>
+                {userEmail}
+              </Dropdown.Toggle>
+              <Dropdown.Menu className="custom-dropdown-menu">
+                <Dropdown.Item className="custom-dropdown-item" onClick={handleEditProfile}>
+                  Edit Profile
+                </Dropdown.Item>
+                <Dropdown.Item className="custom-dropdown-item" onClick={handleLogout}>
+                  Logout
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-      <Houses />
+      {children} {/* Render child components here */}
     </Container>
   );
 }

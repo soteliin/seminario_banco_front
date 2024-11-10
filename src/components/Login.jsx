@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import '../styles/Estilos.css'
 
 function Login({ switchToRegister }) {
   const [email, setEmail] = useState('');
