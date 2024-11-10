@@ -9,11 +9,10 @@ function Home({ children, onLogout }) {
   const navigate = useNavigate();
   const userEmail = localStorage.getItem('userEmail');
 
-  // Handle logout and call the onLogout prop to update the authentication status
   const handleLogout = () => {
     localStorage.removeItem('userEmail');
-    onLogout(); // Call the function to update authentication status
-    navigate('/'); // Redirect to the login page
+    onLogout();
+    navigate('/');
   };
 
   const handleGoToHouses = () => {
@@ -22,6 +21,10 @@ function Home({ children, onLogout }) {
 
   const handleEditProfile = () => {
     navigate('/edit-profile');
+  };
+
+  const handleViewCotizaciones = () => {
+    navigate('/cotizaciones');
   };
 
   return (
@@ -35,6 +38,9 @@ function Home({ children, onLogout }) {
           <Nav className="me-auto">
             <Nav.Link style={{ cursor: 'pointer' }} onClick={handleGoToHouses}>
               Casas
+            </Nav.Link>
+            <Nav.Link style={{ cursor: 'pointer' }} onClick={handleViewCotizaciones}>
+              Mis cotizaciones
             </Nav.Link>
           </Nav>
           <Nav>
