@@ -5,6 +5,7 @@ import Register from './components/Register';
 import Home from './components/Home';
 import EditProfile from './components/EditProfile';
 import Houses from './components/Houses';
+import HouseDetails from './components/HouseDetails'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import './styles/Estilos.css';
@@ -36,7 +37,7 @@ function App() {
             element={
               isAuthenticated ? (
                 <Home>
-                  <Houses /> 
+                  <Houses />
                 </Home>
               ) : (
                 <Navigate to="/" />
@@ -48,12 +49,16 @@ function App() {
             element={
               isAuthenticated ? (
                 <Home>
-                  <EditProfile /> 
+                  <EditProfile />
                 </Home>
               ) : (
                 <Navigate to="/" />
               )
             }
+          />
+          <Route
+            path="/house-details/:id"
+            element={isAuthenticated ? <Home><HouseDetails /></Home> : <Navigate to="/" />}
           />
         </Routes>
       </Container>

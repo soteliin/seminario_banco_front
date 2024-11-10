@@ -44,10 +44,10 @@ function Home({ children }) {
               </Dropdown.Toggle>
               <Dropdown.Menu className="custom-dropdown-menu">
                 <Dropdown.Item className="custom-dropdown-item" onClick={handleEditProfile}>
-                  Edit Profile
+                  Editar perfil
                 </Dropdown.Item>
                 <Dropdown.Item className="custom-dropdown-item" onClick={handleLogout}>
-                  Logout
+                  Cerrar sesión
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
