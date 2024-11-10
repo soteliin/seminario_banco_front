@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Table, Form, Button } from 'react-bootstrap';
 
 function HouseDetails() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [house, setHouse] = useState(null);
   const [loanTypes, setLoanTypes] = useState([]);
@@ -137,6 +138,9 @@ function HouseDetails() {
 
       alert('Cotización añadida exitosamente');
       console.log(response.data);
+
+      // Redirect to the home page
+      navigate('/');
     } catch (error) {
       console.error('Error adding cotización:', error);
       alert('Error al añadir la cotización');
