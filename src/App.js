@@ -4,7 +4,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
 import EditProfile from './components/EditProfile';
-import Houses from './components/Houses'; // Import Houses component
+import Houses from './components/Houses';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import './styles/Estilos.css';
@@ -15,7 +15,6 @@ function App() {
   const switchToRegister = () => setIsRegistering(true);
   const switchToLogin = () => setIsRegistering(false);
 
-  // Check if email exists in localStorage
   const isAuthenticated = !!localStorage.getItem('userEmail');
 
   return (
@@ -37,7 +36,7 @@ function App() {
             element={
               isAuthenticated ? (
                 <Home>
-                  <Houses /> {/* Render the Houses component inside Home */}
+                  <Houses /> 
                 </Home>
               ) : (
                 <Navigate to="/" />
@@ -49,7 +48,7 @@ function App() {
             element={
               isAuthenticated ? (
                 <Home>
-                  <EditProfile /> {/* Render the EditProfile component inside Home */}
+                  <EditProfile /> 
                 </Home>
               ) : (
                 <Navigate to="/" />

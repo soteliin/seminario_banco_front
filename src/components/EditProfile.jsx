@@ -14,11 +14,9 @@ function EditProfile() {
   const [estadosCiviles, setEstadosCiviles] = useState([]);
   const navigate = useNavigate();
 
-  // Get the user's email from localStorage (or use another way if applicable)
   const userEmail = localStorage.getItem('userEmail');
 
   useEffect(() => {
-    // Fetch estados civiles options
     const fetchEstadosCiviles = async () => {
       try {
         const response = await axios.get('http://localhost:5000/estado-civil');
@@ -28,7 +26,6 @@ function EditProfile() {
       }
     };
 
-    // Fetch user info to pre-fill the form
     const fetchUserInfo = async () => {
       try {
         const response = await axios.get('http://localhost:5000/get-user');
@@ -38,7 +35,7 @@ function EditProfile() {
           setRfc(userData.rfc);
           setEdad(userData.edad);
           setTelefono(userData.telefono);
-          setCorreo(userData.correo); // Keep the email unchanged
+          setCorreo(userData.correo); 
           setSueldo(userData.sueldo);
           setEstadoCivil(userData.id_estado_civil);
         }
@@ -58,7 +55,7 @@ function EditProfile() {
       rfc,
       edad,
       telefono,
-      correo, // Include the email in the form data
+      correo, 
       sueldo,
       id_estado_civil: estadoCivil,
     };

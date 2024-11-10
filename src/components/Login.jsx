@@ -24,11 +24,8 @@ function Login({ switchToRegister }) {
       });
 
       if (response.status === 200) {
-        // Save the email to localStorage
         localStorage.setItem('userEmail', email);
-        // Navigate to the home page
         navigate('/home');
-        // navigate('/houses');
       }
     } catch (error) {
       console.error('Error during login:', error.response?.data?.error || 'Login error');

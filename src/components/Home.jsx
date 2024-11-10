@@ -8,23 +8,19 @@ import '../styles/Estilos.css';
 function Home({ children }) {
   const navigate = useNavigate();
 
-  // Get the user's email from localStorage
   const userEmail = localStorage.getItem('userEmail');
 
-  // Handle logout
   const handleLogout = () => {
-    localStorage.removeItem('userEmail'); // Remove email from localStorage
-    navigate('/'); // Redirect to the login page
+    localStorage.removeItem('userEmail');
+    navigate('/'); 
   };
 
-  // Handle navigation to Houses page
   const handleGoToHouses = () => {
-    navigate('/home'); // Navigate to the Houses page
+    navigate('/home'); 
   };
 
-  // Handle editing profile
   const handleEditProfile = () => {
-    navigate('/edit-profile'); // Navigate to the Edit Profile page
+    navigate('/edit-profile'); 
   };
 
   return (
@@ -58,7 +54,7 @@ function Home({ children }) {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-      {children} {/* Render child components here */}
+      {children} 
     </Container>
   );
 }

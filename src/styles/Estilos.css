@@ -1,4 +1,3 @@
-/* Estilos.css */
 html,
 body,
 .app-container-dark {
@@ -19,16 +18,16 @@ body{
 }
 
 .custom-dropdown-menu {
-    background-color: #343a40; /* Dark background color */
-    color: #ffffff; /* Light text color */
-    border: none; /* Remove border if needed */
+    background-color: #343a40;
+    color: #ffffff; 
+    border: none; 
 }
 
 .custom-dropdown-item {
-    color: #ffffff; /* Ensure text remains light */
+    color: #ffffff;
 }
 
 .custom-dropdown-item:hover {
-    background-color: #495057; /* Darker background color on hover */
-    color: #ffffff; /* Ensure text remains light */
+    background-color: #495057;
+    color: #ffffff; 
 }

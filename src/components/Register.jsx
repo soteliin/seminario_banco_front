@@ -10,7 +10,7 @@ function Register({ switchToLogin }) {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [sueldo, setSueldo] = useState('');
-  const [estadoCivil, setEstadoCivil] = useState(''); // State for selected estado civil
+  const [estadoCivil, setEstadoCivil] = useState(''); 
   const [estadosCiviles, setEstadosCiviles] = useState([]);
 
   useEffect(() => {
