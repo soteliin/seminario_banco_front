@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Table, Form } from 'react-bootstrap';
+import { Container, Table, Form, Button } from 'react-bootstrap';
 
 function HouseDetails() {
   const { id } = useParams();
@@ -65,9 +65,41 @@ function HouseDetails() {
     fetchUserSueldo();
   }, [id]);
 
+  const handlePlazoChange = (e) => {
+    const plazoId = parseInt(e.target.value);
+    setSelectedPlazo(plazoId);
+
+    const plazoData = plazos.find((plazo) => plazo.id_plazo === plazoId);
+
+    if (plazoData && selectedLenderDetails && remainingAmount) {
+      const plazoYears = plazoData.plazo;
+      const annualInterestRate = parseFloat(selectedLenderDetails.tasa_interes) / 100;
+      const monthlyInterestRateValue = annualInterestRate / 12;
+      const numberOfPayments = plazoYears * 12;
+
+      const monthlyPaymentValue =
+        (remainingAmount * monthlyInterestRateValue * Math.pow(1 + monthlyInterestRateValue, numberOfPayments)) /
+        (Math.pow(1 + monthlyInterestRateValue, numberOfPayments) - 1);
+
+      const totalPaymentValue = monthlyPaymentValue * numberOfPayments;
+
+      setNumberOfMonths(numberOfPayments);
+      setMonthlyInterestRate(monthlyInterestRateValue);
+      setMonthlyPayment(monthlyPaymentValue);
+      setTotalPayment(totalPaymentValue);
+    } else {
+      setNumberOfMonths(null);
+      setMonthlyInterestRate(null);
+      setMonthlyPayment(null);
+      setTotalPayment(null);
+    }
+  };
+
   const handleLenderChange = async (e) => {
     const lenderId = e.target.value;
     setSelectedLender(lenderId);
+    setSelectedPlazo('');
+    setNumberOfMonths(null);
 
     const lender = lenders.find((l) => l.id_amortizacion === parseInt(lenderId));
     setSelectedLenderDetails(lender);
@@ -91,35 +123,28 @@ function HouseDetails() {
     }
   };
 
-  const handlePlazoChange = (e) => {
-    const plazo = parseInt(e.target.value);
-    setSelectedPlazo(plazo);
+  const handleSubmit = async () => {
+    const email = localStorage.getItem('userEmail');
 
-    if (selectedLenderDetails && remainingAmount && plazo) {
-      const annualInterestRate = parseFloat(selectedLenderDetails.tasa_interes) / 100;
-      const monthlyInterestRateValue = annualInterestRate / 12;
-      const numberOfPayments = plazo * 12;
+    try {
+      const response = await axios.post('http://localhost:5000/add-cotizacion', {
+        id_casa: parseInt(id),
+        id_tipo_prestamo: parseInt(selectedLoanType),
+        id_amortizacion: parseInt(selectedLender),
+        id_plazo: parseInt(selectedPlazo),
+        correo_cliente: email,
+      });
 
-      const monthlyPaymentValue =
-        (remainingAmount * monthlyInterestRateValue * Math.pow(1 + monthlyInterestRateValue, numberOfPayments)) /
-        (Math.pow(1 + monthlyInterestRateValue, numberOfPayments) - 1);
-
-      const totalPaymentValue = monthlyPaymentValue * numberOfPayments;
-
-      setNumberOfMonths(numberOfPayments);
-      setMonthlyInterestRate(monthlyInterestRateValue);
-      setMonthlyPayment(monthlyPaymentValue);
-      setTotalPayment(totalPaymentValue);
-    } else {
-      setNumberOfMonths(null);
-      setMonthlyInterestRate(null);
-      setMonthlyPayment(null);
-      setTotalPayment(null);
+      alert('Cotización añadida exitosamente');
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error adding cotización:', error);
+      alert('Error al añadir la cotización');
     }
   };
 
   const isMonthlyPaymentTooHigh = sueldo && monthlyPayment ? monthlyPayment > sueldo * 0.4 : false;
-
+  const showSalaryComparison = selectedLoanType === '1'; 
   return (
     <Container data-bs-theme="dark" className="my-5">
       {house ? (
@@ -158,11 +183,11 @@ function HouseDetails() {
             <Form.Label>Plazo</Form.Label>
             <Form.Select
               value={selectedPlazo}
-              onChange={handlePlazoChange}
+              onChange={handlePlazoChange} 
             >
               <option value="">Seleccione un plazo</option>
               {plazos.map((plazo) => (
-                <option key={plazo.id_plazo} value={plazo.plazo}>
+                <option key={plazo.id_plazo} value={plazo.id_plazo}>
                   {plazo.plazo} años
                 </option>
               ))}
@@ -170,59 +195,81 @@ function HouseDetails() {
           </Form.Group>
 
           {selectedLoanType && selectedLender && selectedPlazo && (
-            <Table bordered className="mt-4">
-              <tbody>
-                <tr>
-                  <td>Casa</td>
-                  <td>${Number(house.costo).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                </tr>
-                <tr>
-                  <td>Enganche</td>
-                  <td>{selectedLenderDetails ? `${selectedLenderDetails.enganche}%` : 'N/A'}</td>
-                </tr>
-                <tr>
-                  <td>Monto enganche</td>
-                  <td>${downPayment ? downPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'Calculando...'}</td>
-                </tr>
-                <tr>
-                  <td>Monto del crédito</td>
-                  <td>${remainingAmount ? remainingAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'Calculando...'}</td>
-                </tr>
-                <tr>
-                  <td>Años</td>
-                  <td>{selectedPlazo ? `${selectedPlazo} años` : 'N/A'}</td>
-                </tr>
-                <tr>
-                  <td>Número de Meses</td>
-                  <td>{numberOfMonths ? numberOfMonths : 'Calculando...'}</td>
-                </tr>
-                <tr>
-                  <td>Interés Mensual</td>
-                  <td>{monthlyInterestRate ? (monthlyInterestRate * 100).toFixed(2) + '%' : 'Calculando...'}</td>
-                </tr>
-                <tr>
-                  <td>Interés Anual</td>
-                  <td>{selectedLenderDetails ? `${selectedLenderDetails.tasa_interes}%` : 'N/A'}</td>
-                </tr>
-                <tr>
-                  <td>Sueldo</td>
-                  <td>${sueldo ? sueldo.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'Cargando...'}</td>
-                </tr>
-                <tr>
-                  <td>Mensualidad</td>
-                  <td style={{ color: isMonthlyPaymentTooHigh ? 'red' : 'inherit' }}>
-                    {monthlyPayment
-                      ? `$${monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${isMonthlyPaymentTooHigh ? '(el pago mensual excede el 40% del sueldo)' : ''
-                      }`
-                      : 'Calculando...'}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Monto a pagar</td>
-                  <td>${totalPayment ? totalPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'Calculando...'}</td>
-                </tr>
-              </tbody>
-            </Table>
+            <>
+              <Table bordered className="mt-4">
+                <tbody>
+                  <tr>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Casa</strong></td>
+                    <td>${Number(house.costo).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Enganche</strong></td>
+                    <td>{selectedLenderDetails ? `${selectedLenderDetails.enganche}%` : 'N/A'}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Monto enganche</strong></td>
+                    <td>${downPayment ? downPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'Calculando...'}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Monto del crédito</strong></td>
+                    <td>${remainingAmount ? remainingAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'Calculando...'}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Años</strong></td>
+                    <td>
+                      {selectedPlazo
+                        ? `${plazos.find((plazo) => plazo.id_plazo === selectedPlazo)?.plazo || 'N/A'} años`
+                        : 'N/A'}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Número de Meses</strong></td>
+                    <td>{numberOfMonths ? numberOfMonths : 'Calculando...'}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Interés Anual</strong></td>
+                    <td>{selectedLenderDetails ? `${selectedLenderDetails.tasa_interes}%` : 'N/A'}</td>
+                  </tr>
+                  <tr>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Interés Mensual</strong></td>
+                    <td>{monthlyInterestRate ? (monthlyInterestRate * 100).toFixed(2) + '%' : 'Calculando...'}</td>
+                  </tr>
+                  {showSalaryComparison && (
+                    <>
+                      <tr>
+                        <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Sueldo</strong></td>
+                        <td>${sueldo ? sueldo.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'Cargando...'}</td>
+                      </tr>
+                      <tr>
+                        <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Mensualidad</strong></td>
+                        <td style={{ color: isMonthlyPaymentTooHigh ? 'red' : 'inherit' }}>
+                          {monthlyPayment
+                            ? `$${monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${isMonthlyPaymentTooHigh ? '(el pago mensual excede el 40% del sueldo)' : ''}`
+                            : 'Calculando...'}
+                        </td>
+                      </tr>
+                    </>
+                  )}
+                  {!showSalaryComparison && (
+                    <tr>
+                      <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Mensualidad</strong></td>
+                      <td>
+                        ${monthlyPayment ? monthlyPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'Calculando...'}
+                      </td>
+                    </tr>
+                  )}
+                  <tr>
+                    <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}><strong>Monto a pagar</strong></td>
+                    <td>${totalPayment ? totalPayment.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 'Calculando...'}</td>
+                  </tr>
+                </tbody>
+              </Table>
+              <div className="d-flex justify-content-end">
+                <Button variant="primary" className="mt-3" onClick={handleSubmit}>
+                  Guardar cotización
+                </Button>
+              </div>
+            </>
           )}
         </>
       ) : (
