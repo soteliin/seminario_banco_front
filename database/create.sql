@@ -77,19 +77,6 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    segundop.tr_cotizacion_sueldo (
-        id_prestamo_sueldo SERIAL PRIMARY KEY,
-        monto_prestamo DECIMAL(15, 3) NOT NULL CHECK (monto_prestamo >= 0),
-        id_tipo_prestamo INT NOT NULL,
-        id_amortizacion INT NOT NULL,
-        correo_cliente VARCHAR(100) NOT NULL,
-        CONSTRAINT fk_tipo_prestamo FOREIGN KEY (id_tipo_prestamo) REFERENCES segundop.tc_tipo_prestamo (id_tipo_prestamo) ON UPDATE CASCADE ON DELETE CASCADE,
-        CONSTRAINT fk_amortizacion FOREIGN KEY (id_amortizacion) REFERENCES segundop.tc_amortizacion (id_amortizacion) ON UPDATE CASCADE ON DELETE CASCADE,
-        --CONSTRAINT chk_monto_prestamo CHECK (monto_prestamo < sueldo_cliente * 0.4),
-        CONSTRAINT fk_cliente FOREIGN KEY (correo_cliente) REFERENCES segundop.tr_cliente (correo) ON UPDATE CASCADE ON DELETE CASCADE
-    );
-
-CREATE TABLE
     segundop.tr_casa (
         id_casa SERIAL PRIMARY KEY,
         nombre_casa VARCHAR(50) NOT NULL,
@@ -103,12 +90,12 @@ VALUES
     (
         'Casa en la Playa',
         '123 Calle Mar, Playa Azul, Quintana Roo',
-        25000000.00
+        2222223.00
     ),
     (
         'Casa de Campo',
         '456 Camino Rural, Valle Verde, Jalisco',
-        18000000.00
+        1000000.00
     ),
     (
         'Penthouse Urbano',
@@ -149,4 +136,20 @@ VALUES
         'Loft en la Ciudad',
         '1616 Calle Independencia, Querétaro, Querétaro',
         19000000.00
+    );
+    
+
+CREATE TABLE
+    segundop.tr_cotizacion (
+        id_cotizacion SERIAL PRIMARY KEY,
+        id_casa INT NOT NULL,
+        id_tipo_prestamo INT NOT NULL,
+        id_amortizacion INT NOT NULL,
+        id_plazo INT NOT NULL,
+        correo_cliente VARCHAR(100) NOT NULL,
+        CONSTRAINT fk_casa FOREIGN KEY (id_casa) REFERENCES segundop.tr_casa (id_casa) ON UPDATE CASCADE ON DELETE CASCADE,
+        CONSTRAINT fk_tipo_prestamo FOREIGN KEY (id_tipo_prestamo) REFERENCES segundop.tc_tipo_prestamo (id_tipo_prestamo) ON UPDATE CASCADE ON DELETE CASCADE,
+        CONSTRAINT fk_amortizacion FOREIGN KEY (id_amortizacion) REFERENCES segundop.tc_amortizacion (id_amortizacion) ON UPDATE CASCADE ON DELETE CASCADE,
+        CONSTRAINT fk_plazo FOREIGN KEY (id_plazo) REFERENCES segundop.tc_plazo (id_plazo) ON UPDATE CASCADE ON DELETE CASCADE,
+        CONSTRAINT fk_cliente FOREIGN KEY (correo_cliente) REFERENCES segundop.tr_cliente (correo) ON UPDATE CASCADE ON DELETE CASCADE
     );
