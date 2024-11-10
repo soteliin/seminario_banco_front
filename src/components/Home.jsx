@@ -5,26 +5,27 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import '../styles/Estilos.css';
 
-function Home({ children }) {
+function Home({ children, onLogout }) {
   const navigate = useNavigate();
-
   const userEmail = localStorage.getItem('userEmail');
 
+  // Handle logout and call the onLogout prop to update the authentication status
   const handleLogout = () => {
     localStorage.removeItem('userEmail');
-    navigate('/'); 
+    onLogout(); // Call the function to update authentication status
+    navigate('/'); // Redirect to the login page
   };
 
   const handleGoToHouses = () => {
-    navigate('/home'); 
+    navigate('/home');
   };
 
   const handleEditProfile = () => {
-    navigate('/edit-profile'); 
+    navigate('/edit-profile');
   };
 
   return (
-    <Container fluid className='home'>
+    <Container fluid className="home">
       <Navbar bg="dark" variant="dark" expand="lg" className="mb-4 sticky-top">
         <Navbar.Brand style={{ cursor: 'pointer' }} onClick={handleGoToHouses}>
           Home
@@ -54,7 +55,7 @@ function Home({ children }) {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-      {children} 
+      {children}
     </Container>
   );
 }

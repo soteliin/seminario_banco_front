@@ -13,6 +13,7 @@ import './styles/Estilos.css';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false); // State to handle switching between Login and Register
 
   // Function to validate user email
   const validateUserEmail = async () => {
@@ -21,7 +22,7 @@ function App() {
 
     try {
       const response = await axios.get(`http://localhost:5000/get-user?email=${email}`);
-      if (response.status ===200) {
+      if (response.status === 200) {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
@@ -30,6 +31,11 @@ function App() {
       console.error('Error validating user email:', error);
       setIsAuthenticated(false);
     }
+  };
+
+  // Function to handle logout
+  const handleLogout = () => {
+    setIsAuthenticated(false);
   };
 
   // Run validation on component mount
@@ -47,7 +53,11 @@ function App() {
               isAuthenticated ? (
                 <Navigate to="/home" />
               ) : (
-                <Login switchToRegister={() => setIsAuthenticated(false)} onLogin={validateUserEmail} />
+                isRegistering ? (
+                  <Register switchToLogin={() => setIsRegistering(false)} />
+                ) : (
+                  <Login switchToRegister={() => setIsRegistering(true)} onLogin={validateUserEmail} />
+                )
               )
             }
           />
@@ -55,7 +65,7 @@ function App() {
             path="/home"
             element={
               isAuthenticated ? (
-                <Home>
+                <Home onLogout={handleLogout}>
                   <Houses />
                 </Home>
               ) : (
@@ -67,7 +77,7 @@ function App() {
             path="/edit-profile"
             element={
               isAuthenticated ? (
-                <Home>
+                <Home onLogout={handleLogout}>
                   <EditProfile />
                 </Home>
               ) : (
@@ -79,7 +89,7 @@ function App() {
             path="/house-details/:id"
             element={
               isAuthenticated ? (
-                <Home>
+                <Home onLogout={handleLogout}>
                   <HouseDetails />
                 </Home>
               ) : (
