@@ -1,7 +1,6 @@
-// Houses.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/Estilos.css';
+import { Container, Table } from 'react-bootstrap';
 
 function Houses() {
   const [houses, setHouses] = useState([]);
@@ -20,9 +19,9 @@ function Houses() {
   }, []);
 
   return (
-    <div className="houses-container">
-      <h2 className="houses-title">Casas Disponibles</h2>
-      <table className="houses-table">
+    <Container data-bs-theme="dark" className="my-5">
+      <h2 data-bs-theme="dark" className="text-center mb-4">Casas Disponibles</h2>
+      <Table striped bordered hover responsive className="text-center">
         <thead>
           <tr>
             <th>Nombre de la Casa</th>
@@ -35,15 +34,17 @@ function Houses() {
             <tr key={house.id_casa}>
               <td>{house.nombre_casa}</td>
               <td>{house.direccion}</td>
-              <td>${Number(house.costo).toLocaleString('en-US', {
+              <td>
+                ${Number(house.costo).toLocaleString('en-US', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
-                })}</td>
+                })}
+              </td>
             </tr>
           ))}
         </tbody>
-      </table>
-    </div>
+      </Table>
+    </Container>
   );
 }
 
