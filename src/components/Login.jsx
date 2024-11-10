@@ -23,7 +23,11 @@ function Login({ switchToRegister }) {
       });
 
       if (response.status === 200) {
-        navigate('/houses');
+        // Save the email to localStorage
+        localStorage.setItem('userEmail', email);
+        // Navigate to the home page
+        navigate('/home');
+        // navigate('/houses');
       }
     } catch (error) {
       console.error('Error during login:', error.response?.data?.error || 'Login error');
@@ -32,17 +36,14 @@ function Login({ switchToRegister }) {
 
   return (
     <Container data-bs-theme="dark" className="d-flex justify-content-center align-items-center min-vh-100">
-    {/* <Container data-bs-theme="dark" className="d-flex justify-content-center align-items-center min-vh-100 bg-light text-dark"> */}
       <Row className="w-100">
         <Col xs={12} md={6} lg={4} className="mx-auto">
           <Card className="p-4 shadow-sm border rounded">
-          {/* <Card className="p-4 shadow-sm bg-white border rounded"> */}
             <Card.Body>
               <h2 className="mb-4 text-center font-weight-bold">Inicio de sesión</h2>
               <Form onSubmit={handleLogin}>
                 <Form.Group controlId="email" className="mb-3">
-                  <Form.Label>Correo electrónico</Form.Label> {/* Ensure the label is dark */}
-                  {/* <Form.Label className="text-dark">Correo electrónico</Form.Label> Ensure the label is dark */}
+                  <Form.Label>Correo electrónico</Form.Label> 
                   <Form.Control
                     type="email"
                     placeholder="Ingrese su correo"
@@ -52,8 +53,7 @@ function Login({ switchToRegister }) {
                   />
                 </Form.Group>
                 <Form.Group controlId="password" className="mb-3">
-                  <Form.Label >Contraseña</Form.Label> {/* Ensure the label is dark */}
-                  {/* <Form.Label className="text-dark">Contraseña</Form.Label> Ensure the label is dark */}
+                  <Form.Label >Contraseña</Form.Label> 
                   <Form.Control
                     type="password"
                     placeholder="Ingrese su contraseña"

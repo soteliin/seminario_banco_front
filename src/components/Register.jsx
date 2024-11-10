@@ -52,11 +52,9 @@ function Register({ switchToLogin }) {
 
   return (
     <Container data-bs-theme="dark" className="d-flex justify-content-center align-items-center min-vh-100 margin">
-    {/* <Container className="d-flex justify-content-center align-items-center min-vh-100 bg-light text-dark"> */}
       <Row className="w-100">
         <Col xs={12} md={6} lg={4} className="mx-auto">
           <Card className="p-4 shadow-sm border rounded my-5">
-          {/* <Card className="p-4 shadow-sm bg-white border rounded"> */}
             <Card.Body>
               <h2 className="mb-3 text-center font-weight-bold">Registro</h2>
               <Form onSubmit={handleRegister}>
