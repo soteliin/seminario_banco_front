@@ -11,7 +11,11 @@ function HouseDetails() {
   const [lenders, setLenders] = useState([]);
   const [selectedLender, setSelectedLender] = useState('');
   const [selectedLenderDetails, setSelectedLenderDetails] = useState(null);
-  const [downPayment, setDownPayment] = useState(null); // State for the down payment
+  const [downPayment, setDownPayment] = useState(null);
+  const [remainingAmount, setRemainingAmount] = useState(null);
+  const [plazos, setPlazos] = useState([]);
+  const [selectedPlazo, setSelectedPlazo] = useState('');
+  const [monthlyPayment, setMonthlyPayment] = useState(null); // State for the monthly payment
 
   useEffect(() => {
     const fetchHouseDetails = async () => {
@@ -47,21 +51,49 @@ function HouseDetails() {
   }, [id]);
 
   // Handle selecting a lender
-  const handleLenderChange = (e) => {
+  const handleLenderChange = async (e) => {
     const lenderId = e.target.value;
     setSelectedLender(lenderId);
 
-    // Find the selected lender's details and set them
     const lender = lenders.find((l) => l.id_amortizacion === parseInt(lenderId));
     setSelectedLenderDetails(lender);
 
-    // Calculate the down payment if the house cost is available
     if (lender && house) {
       const enganchePercentage = parseFloat(lender.enganche);
       const downPaymentAmount = (house.costo * enganchePercentage) / 100;
+      const remainingAmountValue = house.costo - downPaymentAmount;
       setDownPayment(downPaymentAmount);
+      setRemainingAmount(remainingAmountValue);
     } else {
       setDownPayment(null);
+      setRemainingAmount(null);
+    }
+
+    try {
+      const response = await axios.get(`http://localhost:5000/cat-plazos?id_amortizacion=${lenderId}`);
+      setPlazos(response.data);
+    } catch (error) {
+      console.error('Error fetching plazos:', error);
+    }
+  };
+
+  // Handle selecting a plazo and calculate the monthly payment
+  const handlePlazoChange = (e) => {
+    const plazo = parseInt(e.target.value);
+    setSelectedPlazo(plazo);
+
+    if (selectedLenderDetails && remainingAmount && plazo) {
+      const annualInterestRate = parseFloat(selectedLenderDetails.tasa_interes) / 100;
+      const monthlyInterestRate = annualInterestRate / 12;
+      const numberOfPayments = plazo * 12;
+      
+      const monthlyPaymentValue =
+        (remainingAmount * monthlyInterestRate) /
+        (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+
+      setMonthlyPayment(monthlyPaymentValue);
+    } else {
+      setMonthlyPayment(null);
     }
   };
 
@@ -111,7 +143,31 @@ function HouseDetails() {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               }) : 'Calculando...'}</p>
+              <p><strong>Cantidad Restante:</strong> ${remainingAmount ? remainingAmount.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }) : 'Calculando...'}</p>
             </div>
+          )}
+          <Form.Group controlId="plazo" className="mt-1">
+            <Form.Label>Plazo</Form.Label>
+            <Form.Select
+              value={selectedPlazo}
+              onChange={handlePlazoChange}
+            >
+              <option value="">Seleccione un plazo</option>
+              {plazos.map((plazo) => (
+                <option key={plazo.id_plazo} value={plazo.plazo}>
+                  {plazo.plazo} años
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+          {monthlyPayment && (
+            <p className="mt-4"><strong>Pago Mensual:</strong> ${monthlyPayment.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}</p>
           )}
         </Card>
       ) : (
