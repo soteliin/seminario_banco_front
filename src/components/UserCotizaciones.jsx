@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Container } from 'react-bootstrap';
+import { Table, Container, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 function UserCotizaciones() {
   const [cotizaciones, setCotizaciones] = useState([]);
@@ -9,6 +10,7 @@ function UserCotizaciones() {
   const [amortizationNames, setAmortizationNames] = useState({});
   const [plazoNames, setPlazoNames] = useState({});
   const userEmail = localStorage.getItem('userEmail');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCotizaciones = async () => {
@@ -93,6 +95,11 @@ function UserCotizaciones() {
     fetchCotizaciones();
   }, [userEmail]);
 
+  const handleCotizacionDetails = (id_cotizacion) => {
+    // Navigate to the edit page with the id_cotizacion as a parameter
+    navigate(`/cotizacion-details/${id_cotizacion}`);
+  };
+
   return (
     <Container data-bs-theme="dark" className="my-5">
       <h2 className="mb-4">Mis cotizaciones</h2>
@@ -104,6 +111,7 @@ function UserCotizaciones() {
               <th>Tipo de préstamo</th>
               <th>Amortización</th>
               <th>Plazo</th>
+              <th style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}></th>
             </tr>
           </thead>
           <tbody>
@@ -113,6 +121,11 @@ function UserCotizaciones() {
                 <td>{loanTypeNames[coti.id_tipo_prestamo] || 'Cargando...'}</td>
                 <td>{amortizationNames[coti.id_amortizacion] || 'Cargando...'}</td>
                 <td>{plazoNames[coti.id_plazo] ? `${plazoNames[coti.id_plazo]} años` : 'Cargando...'}</td>
+                <td style={{ textAlign: 'right', whiteSpace: 'nowrap', width: '1%' }}>
+                  <Button variant="primary" onClick={() => handleCotizacionDetails(coti.id_cotizacion)}>
+                    Ver cotización
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>

@@ -7,7 +7,8 @@ import Home from './components/Home';
 import EditProfile from './components/EditProfile';
 import Houses from './components/Houses';
 import HouseDetails from './components/HouseDetails';
-import UserCotizaciones from './components/UserCotizaciones'; 
+import UserCotizaciones from './components/UserCotizaciones';
+import CotizacionDetails from './components/CotizacionDetails';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import './styles/Estilos.css';
@@ -104,6 +105,18 @@ function App() {
               isAuthenticated ? (
                 <Home onLogout={handleLogout}>
                   <UserCotizaciones />
+                </Home>
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+          <Route
+            path="/cotizacion-details/:id_cotizacion"
+            element={
+              isAuthenticated ? (
+                <Home onLogout={handleLogout}>
+                  <CotizacionDetails />
                 </Home>
               ) : (
                 <Navigate to="/" />

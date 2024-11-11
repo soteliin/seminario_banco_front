@@ -137,7 +137,6 @@ function HouseDetails() {
       });
 
       alert('Cotización añadida exitosamente');
-      console.log(response.data);
 
       // Redirect to the home page
       navigate('/');
@@ -153,6 +152,9 @@ function HouseDetails() {
     <Container data-bs-theme="dark" className="my-5">
       {house ? (
         <>
+        <div className="text-center">
+          <h2>{house.nombre_casa}</h2>
+        </div>
           <Form.Group controlId="loanType" className="mt-4">
             <Form.Label>Tipo de Préstamo</Form.Label>
             <Form.Select
