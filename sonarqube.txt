@@ -1,0 +1,10 @@
+sqp_abcafc85502f975a767efea59bc48230747973d3
+
+linux
+sonar-scanner \
+  -Dsonar.projectKey=seminario-2p-front \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.token=sqp_abcafc85502f975a767efea59bc48230747973d3
+
+sonar-scanner.bat -D"sonar.projectKey=seminario-2p-front" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.token=sqp_abcafc85502f975a767efea59bc48230747973d3"
