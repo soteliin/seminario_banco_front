@@ -27,6 +27,11 @@ function Home({ children, onLogout }) {
     navigate('/cotizaciones');
   };
 
+  // Admin-specific function
+  const handleAdminPage = () => {
+    navigate('/admin');
+  };
+
   return (
     <Container fluid className="home">
       <Navbar bg="dark" variant="dark" expand="lg" className="mb-4 sticky-top">
@@ -42,6 +47,12 @@ function Home({ children, onLogout }) {
             <Nav.Link style={{ cursor: 'pointer' }} onClick={handleViewCotizaciones}>
               Mis cotizaciones
             </Nav.Link>
+            {/* Conditional rendering for the admin user */}
+            {userEmail === 'admin@admin.admin' && (
+              <Nav.Link style={{ cursor: 'pointer' }} onClick={handleAdminPage}>
+                Página de Admin
+              </Nav.Link>
+            )}
           </Nav>
           <Nav>
             <Dropdown align="end">

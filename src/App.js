@@ -9,6 +9,7 @@ import Houses from './components/Houses';
 import HouseDetails from './components/HouseDetails';
 import UserCotizaciones from './components/UserCotizaciones';
 import CotizacionDetails from './components/CotizacionDetails';
+import AdminPage from './components/AdminPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container } from 'react-bootstrap';
 import './styles/Estilos.css';
@@ -123,6 +124,14 @@ function App() {
               )
             }
           />
+
+        <Route path="/admin" element={isAuthenticated ? (
+                <Home onLogout={handleLogout}>
+                  <AdminPage />
+                </Home>
+              ) : (
+                <Navigate to="/" />
+              )} />
         </Routes>
       </Container>
     </Router>
